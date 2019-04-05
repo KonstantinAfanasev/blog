@@ -13,7 +13,7 @@ class ImageUpload extends Model{
   public function rules() {
       return [
           [['image'], 'required'],
-          [['image'], 'file', 'extensions' => 'jpg,png']
+          [['image'], 'file', 'extensions' => 'jpg,png,gif']
   
          ];
   }
@@ -26,8 +26,6 @@ class ImageUpload extends Model{
       if($this->validate())
       {
      $this->deleteCurrentImage($currentImage);
-     
-     
      return $this->saveImage();
     
 }
@@ -36,16 +34,17 @@ class ImageUpload extends Model{
   private function getFolder()
 
        {
-          return Yii::getAlias('@web').'uploads/';
+          return Yii::getAlias('@web') . 'uploads/';
        }       
-        private function generateFilename()
+        
+       private function generateFilename()
         {
             return strtolower(md5(uniqid($this->image->baseName)) . '.' . $this->image->extension);
         }
        
         public function deleteCurrentImage($currentImage)
         {
-            if ($this->fileExists($currentImage))
+            if($this->fileExists($currentImage))
           
          {
           unlink($this->getFolder() . $currentImage);
@@ -55,7 +54,7 @@ class ImageUpload extends Model{
         
         public function fileExists($currentImage)
         {
-            if (!empty($currentImage) && $currentImage != null)
+            if(!empty($currentImage) && $currentImage != null)
             {
                 return  file_exists($this->getFolder() . $currentImage);
         }
@@ -65,6 +64,7 @@ class ImageUpload extends Model{
             $filename = $this->generateFilename();
       
             $this->image->saveAs($this->getFolder() . $filename);
+            
             return $filename;
         }
         }
